@@ -1,29 +1,31 @@
-import time
-from flask import Flask, render_template, request, url_for, redirect, jsonify
+import threading
+from flask import Flask, render_template, url_for, redirect
 from pymongo import MongoClient
+import time
 
 app = Flask(__name__)
 
 # conexion = MongoDB(app)
 client = MongoClient('localhost')
 database = client['currencyapp']
-timer = ''
 
 
 def updateDatabase():
-    # conexion = client['conexion']
-    # print(conexion)
-    # database.update_one({'_id': conexion._id}, {'$set': {'amount': conexion.amount}})
     print('Updating database...')
 
-
-def countdown(countdownTime):
-    while countdownTime:
-        mins, secs = divmod(countdownTime, 60)
-        timer = '{:02d}:{:02d}'.format(mins, secs)
-        print(timer, end="\r")
+# 300 = 5 minutes
+def countdown(countDownTime=300):
+    global my_timer
+    my_timer = countDownTime
+    while my_timer > 0:
         time.sleep(1)
-        countdownTime -= 1
+        my_timer -= 1
+    updateDatabase()
+    countdown(countDownTime)
+
+
+countdown_thread = threading.Thread(target=countdown)
+countdown_thread.start()
 
 
 def getDocuments(currency='dava'):
@@ -33,25 +35,24 @@ def getDocuments(currency='dava'):
 
 @app.route('/<currency>')
 def index(currency='dava'):
-
-    currencyName = ''
+    global currencyName
 
     if currency == 'dava':
         currencyName = 'Endava'
 
-    elif currency == 'ec':
+    if currency == 'ec':
         currencyName = 'Ecopetrol'
 
-    elif currency == 'ibm':
+    if currency == 'ibm':
         currencyName = 'IBM'
 
-    elif currency == 'btc':
+    if currency == 'btc':
         currencyName = 'Bitcoin'
 
-    elif currency == 'eth':
+    if currency == 'eth':
         currencyName = 'Ethereum'
 
-    elif currency == 'ada':
+    if currency == 'ada':
         currencyName = 'Cardano'
 
     data = {
@@ -60,19 +61,7 @@ def index(currency='dava'):
         'documents': getDocuments(currency),
     }
 
-    return render_template('index.html', data=data)
-
-
-@app.before_request
-def before_request():
-    print('Antes de la petición...')
-
-
-@app.after_request
-def after_request(response):
-    print('Después de la petición')
-    return response
-
+    return render_template('index.html', data=data, countdown=my_timer)
 
 def pageNotFound(error):
     return redirect(url_for('index/dava'))

@@ -231,8 +231,13 @@ body {
   height: 6rem;
 }
 
+.table__head .table__labels {
+  width: 100%;
+}
+
 .table__head .table__labels th {
   text-align: left;
+  flex: 1;
 }
 
 .table__body tr {
@@ -245,7 +250,7 @@ body {
   padding-left: 4rem !important;
 }
 
-.column--6 {
+.column--3 {
   padding-right: 6.2rem;
 }
 
