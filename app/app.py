@@ -1,81 +1,80 @@
-from flask import Flask, render_template, request, url_for, redirect, jsonify
-from flask_mysqldb import MySQL
-
-app = Flask(__name__)
-
-# Conexión MySQL
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '123456'
-app.config['MYSQL_DB'] = 'base_datos'
-
-conexion = MySQL(app)
+from flask import Flask, request, jsonify, Response
+from flask_pymongo import PyMongo
+from bson import json_util
+from bson.objectid import ObjectId
 
 
-@app.before_request
-def before_request():
-    print("Antes de la petición...")
+#Comandos para levantar el entorno virtual -> virtualenv env (nombre del entorno virtual)
+# .\env\Scripts\activate.bat
+#Para iniciar flask o la aplicacion como tal dar - > python app/app.py
 
+app=Flask(__name__)
+app.config['MONGO_URI']= 'mongodb://localhost/Pruebadb'
 
-@app.after_request
-def after_request(response):
-    print("Después de la petición")
-    return response
-
+mongo= PyMongo(app)
 
 @app.route('/')
 def index():
-    # return "<h1>UskoKruM2010 - Suscríbete!</h1>"
-    cursos = ['PHP', 'Python', 'Java', 'Kotlin', 'Dart', 'JavaScript']
-    data = {
-        'titulo': 'Index123',
-        'bienvenida': '¡Saludos!',
-        'cursos': cursos,
-        'numero_cursos': len(cursos)
-    }
-    return render_template('index.html', data=data)
+    return 'Web App with Python Flask!'
 
 
-@app.route('/contacto/<nombre>/<int:edad>')
-def contacto(nombre, edad):
-    data = {
-        'titulo': 'Contacto',
-        'nombre': nombre,
-        'edad': edad
-    }
-    return render_template('contacto.html', data=data)
+
+@app.route('/users', methods =['POST'])
+def create_user():
+    username = request.json['username']
+    password = request.json['password']
+    email = request.json['email']
+    
+    if username and email and password:
+        id = mongo.db.users.insert_one({'username': username, 'email': email, 'password':password})
+
+        response = {
+            'id' : str(id),
+            'username': username, 
+            'password': password, 
+            'email': email         
+        } 
+        return response
+        
+    else:
+        return not_found()
+    return {'message' :'recieved'}
 
 
-def query_string():
-    print(request)
-    print(request.args)
-    print(request.args.get('param1'))
-    print(request.args.get('param2'))
-    return "Ok"
 
 
-@app.route('/cursos')
-def listar_cursos():
-    data = {}
-    try:
-        cursor = conexion.connection.cursor()
-        sql = "SELECT codigo, nombre, creditos FROM curso ORDER BY nombre ASC"
-        cursor.execute(sql)
-        cursos = cursor.fetchall()
-        # print(cursos)
-        data['cursos'] = cursos
-        data['mensaje'] = 'Exito'
-    except Exception as ex:
-        data['mensaje'] = 'Error...'
-    return jsonify(data)
+@app.route('/users',methods=['GET'])
+def get_users():
+    users = mongo.db.users.find()
+    response=json_util.dumps(users)
+    return Response(response , mimetype = 'application/json' )
 
+@app.route('/users/<id>',methods=['GET'])
+def get_user(id):
+   user = mongo.db.users.find_one({'_id': ObjectId(id)})
+   response = json_util.dumps(user)
+   return Response(response, mimetype='application/json')
 
-def pagina_no_encontrada(error):
-    # return render_template('404.html'), 404
-    return redirect(url_for('index'))
+@app.route('/users/<id>',methods=['DELETE'])
+def delete_user(id):
+    mongo.db.users.delete_one({'_id':ObjectId(id)})
+    response = jsonify({'message': 'user' + id+ ' was deleted '})
+    return response
 
+@app.errorhandler(404)
+def not_found(error=None):
+    response = jsonify( {
+        'message': 'Resource Not Found'+ request.url,
+        'status': 404 
+    })
+    response.status.code=404
+    return response
+    
+        
 
-if __name__ == '__main__':
-    app.add_url_rule('/query_string', view_func=query_string)
-    app.register_error_handler(404, pagina_no_encontrada)
-    app.run(debug=True, port=5000)
+if __name__ == "__main__":
+    app.run(debug=True)
+    
+    
+    
+    
