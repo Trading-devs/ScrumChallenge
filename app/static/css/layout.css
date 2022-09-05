@@ -219,12 +219,20 @@ body {
   background: var(--color-dark--1);
 }
 
+.table__countdown {
+  background: #363F45;
+}
+
 .table__head th {
   font-size: 1.8rem;
   color: #fff;
   line-height: 1.2;
   font-weight: unset;
   height: 6rem;
+}
+
+.table__head .table__labels th {
+  text-align: left;
 }
 
 .table__body tr {

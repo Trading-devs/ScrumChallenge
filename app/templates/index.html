@@ -18,7 +18,7 @@
       src="{{ url_for('static', filename='js/layout.js') }}"
     ></script>
 
-    <title>Currency App</title>
+    <title> {{ data.currency }} | Currency App</title>
   </head>
 
   <body>
@@ -28,6 +28,54 @@
       </div>
 
       <ul class="coins">
+        <!-- <li class="coin coin--currency" data-id="1234567890">
+          <h2 class="coin__title">Endava</h2>
+          <div class="coin__details">
+            <span class="coin__icon">🏃‍♂️</span>
+            <span class="coin__value">5.2</span>
+            <span class="coin__unit">km</span>
+          </div>
+          <div class="coin__details">
+            <span class="coin__icon">⏱</span>
+            <span class="coin__value">24</span>
+            <span class="coin__unit">min</span>
+          </div>
+          <div class="coin__details">
+            <span class="coin__icon">⚡️</span>
+            <span class="coin__value">4.6</span>
+            <span class="coin__unit">min/km</span>
+          </div>
+          <div class="coin__details">
+            <span class="coin__icon">🦶🏼</span>
+            <span class="coin__value">178</span>
+            <span class="coin__unit">spm</span>
+          </div>
+        </li>
+
+        <li class="coin coin--cryptocurrency" data-id="1234567891">
+          <h2 class="coin__title">Bitcoin</h2>
+          <div class="coin__details">
+            <span class="coin__icon">🚴‍♀️</span>
+            <span class="coin__value">27</span>
+            <span class="coin__unit">km</span>
+          </div>
+          <div class="coin__details">
+            <span class="coin__icon">⏱</span>
+            <span class="coin__value">95</span>
+            <span class="coin__unit">min</span>
+          </div>
+          <div class="coin__details">
+            <span class="coin__icon">⚡️</span>
+            <span class="coin__value">16</span>
+            <span class="coin__unit">km/h</span>
+          </div>
+          <div class="coin__details">
+            <span class="coin__icon">⛰</span>
+            <span class="coin__value">223</span>
+            <span class="coin__unit">m</span>
+          </div>
+        </li> -->
+
         <li class="coin coin--currency" data-id="1234567890">
           <a class="coin__link" href="dava">
             <h2 class="coin__title">Endava (DAVA)</h2>
@@ -72,18 +120,23 @@
       <table class="table">
         <thead class="table__head">
           <tr>
-            <th class="table__title" colspan="6">
+            <th class="table__title" colspan="3">
               {{ data.currency }} ({{ data.abbreviation }})
             </th>
+
+            <th class="table__countdown" colspan="3">
+              ⏲ Next update in <span class="timer">5:00</span> min
+            </th>
+
           </tr>
 
-          <tr>
-            <th class="column--1">Date</th>
-            <th class="column--2">Open</th>
-            <th class="column--3">High</th>
-            <th class="column--4">Low</th>
-            <th class="column--5">Close</th>
-            <th class="column--6">Volume</th>
+          <tr class="table__labels">
+            <th class="column--1">📅 Date</th>
+            <th class="column--2">🔓 Open</th>
+            <th class="column--3">📈 High</th>
+            <th class="column--4">📉 Low</th>
+            <th class="column--5">🔒 Close</th>
+            <th class="column--6">⚡ Volume</th>
           </tr>
         </thead>
 
