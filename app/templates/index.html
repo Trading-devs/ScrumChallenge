@@ -1,16 +1,105 @@
-{% extends './layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-{% block title %}{{ data.titulo }}{% endblock %}
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/layout.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/layout.js') }}"
+    ></script>
 
-{% block body %}
-<h1>{{ data.bienvenida }}</h1>
-{% if data.numero_cursos > 0 %}
-<ul>
-    {% for c in data.cursos %}
-    <li>{{ c }}</li>
-    {% endfor %}
-</ul>
-{% else %}
-<h2>No existen cursos...</h2>
-{% endif %}
-{% endblock %}
+    <title>Currency App</title>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <div class="logo">
+        <h1>Currency <span>App</span></h1>
+      </div>
+
+      <ul class="coins">
+        <li class="coin coin--currency" data-id="1234567890">
+          <a class="coin__link" href="dava">
+            <h2 class="coin__title">Endava (DAVA)</h2>
+          </a>
+        </li>
+
+        <li class="coin coin--currency" data-id="1234567890">
+          <a class="coin__link" href="ec">
+            <h2 class="coin__title">Ecopetrol (EC)</h2>
+          </a>
+        </li>
+
+        <li class="coin coin--currency" data-id="1234567890">
+          <a class="coin__link" href="ibm">
+            <h2 class="coin__title">IBM (IBM)</h2>
+          </a>
+        </li>
+
+        <li class="coin coin--cryptocurrency" data-id="1234567890">
+          <a class="coin__link" href="btc">
+            <h2 class="coin__title">Bitcoin (BTC)</h2>
+          </a>
+        </li>
+
+        <li class="coin coin--cryptocurrency" data-id="1234567890">
+          <a class="coin__link" href="eth">
+            <h2 class="coin__title">Ethereum (ETH)</h2>
+          </a>
+        </li>
+
+        <li class="coin coin--cryptocurrency" data-id="1234567890">
+          <a class="coin__link" href="ada">
+            <h2 class="coin__title">Cardano (ADA)</h2>
+          </a>
+        </li>
+      </ul>
+
+      <p class="copyright">&copy; Copyright 2022</p>
+    </div>
+
+    <div class="container-table">
+      <table class="table">
+        <thead class="table__head">
+          <tr>
+            <th class="table__title" colspan="6">
+              {{ data.currency }} ({{ data.abbreviation }})
+            </th>
+          </tr>
+
+          <tr>
+            <th class="column--1">Date</th>
+            <th class="column--2">Open</th>
+            <th class="column--3">High</th>
+            <th class="column--4">Low</th>
+            <th class="column--5">Close</th>
+            <th class="column--6">Volume</th>
+          </tr>
+        </thead>
+
+        <tbody class="table__body">
+          {% for document in data.documents %}
+          <tr>
+            <td class="column--1">{{ document.date }}</td>
+            <td class="column--2">{{ document.open }}</td>
+            <td class="column--3">{{ document.high }}</td>
+            <td class="column--4">{{ document.low }}</td>
+            <td class="column--5">{{ document.close }}</td>
+            <td class="column--6">{{ document.volume }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
