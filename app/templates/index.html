@@ -13,12 +13,18 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/layout.css') }}"
     />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+    <script defer type="text/javascript">
+      timeLeft = '{{ countdown }}';
+    </script>
     <script
       defer
+      type="text/javascript"
       src="{{ url_for('static', filename='js/layout.js') }}"
     ></script>
 
-    <title> {{ data.currency }} | Currency App</title>
+    <title>{{ data.currency }} | Currency App</title>
   </head>
 
   <body>
@@ -120,23 +126,19 @@
       <table class="table">
         <thead class="table__head">
           <tr>
-            <th class="table__title" colspan="3">
+            <th class="table__title" colspan="1">
               {{ data.currency }} ({{ data.abbreviation }})
             </th>
 
-            <th class="table__countdown" colspan="3">
+            <th class="table__countdown" colspan="2">
               ⏲ Next update in <span class="timer">5:00</span> min
             </th>
-
           </tr>
 
           <tr class="table__labels">
-            <th class="column--1">📅 Date</th>
-            <th class="column--2">🔓 Open</th>
-            <th class="column--3">📈 High</th>
-            <th class="column--4">📉 Low</th>
-            <th class="column--5">🔒 Close</th>
-            <th class="column--6">⚡ Volume</th>
+            <th class="column--1">📅 Date and Hour</th>
+            <th class="column--2">💰 Price</th>
+            <th class="column--3">⚡ Volume</th>
           </tr>
         </thead>
 
@@ -144,15 +146,43 @@
           {% for document in data.documents %}
           <tr>
             <td class="column--1">{{ document.date }}</td>
-            <td class="column--2">{{ document.open }}</td>
-            <td class="column--3">{{ document.high }}</td>
-            <td class="column--4">{{ document.low }}</td>
-            <td class="column--5">{{ document.close }}</td>
-            <td class="column--6">{{ document.volume }}</td>
+            <td class="column--2">{{ document.price }}</td>
+            <td class="column--3">{{ document.volume }}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+
+    <div class="container-table">
+      
+        <canvas id="lineChart" width="500" height="630" ></canvas>
+        <script>
+          console.log('hola');
+            var ctx = document.getElementById("lineChart").getContext("2d");
+            var lineChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: {{ labels | safe }},
+                    datasets: [
+                        {
+                         label: "Stock Price",
+                        data: {{ values | safe }},
+                        fill: false,
+                        borderColor: "rgb(75 , 192, 192)",
+                        lineTension: 0.1
+                        }      
+                    ]
+                },
+                Options: {
+                    responsive: true
+                }
+            });
+        </script>
+      
+    </div>
+
+
+
   </body>
 </html>

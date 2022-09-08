@@ -73,7 +73,7 @@ body {
 
 /* SIDEBAR */
 .sidebar {
-  flex-basis: 50rem;
+  flex-basis: 30rem;
   background: var(--sidebar-background);
   padding: 3rem 5rem 4rem 5rem;
   display: flex;
@@ -170,29 +170,42 @@ body {
   font-weight: 800;
 }
 
+#lineChart {
+  /* background-color:#aaa; */
+  z-index: 10000;
+  width: 50%;
+  height: 100%;
+  color: aquamarine!important;
+  /* border-bottom-right-radius: 1rem;
+  border-top-right-radius: 1rem; */
+}
+
 /* MAP */
 
 .container-table {
   flex: 1;
   height: 100%;
-  width: 100%;
+  width: 50%;
   background: var(--board-background);
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   padding: 5rem;
 }
 
 .table {
   height: 100%;
-  width: inherit;
+  width: 100%;
   background: var(--color-light--2);
   table-layout: fixed;
+  border-bottom-left-radius: 1rem;
+  border-top-left-radius: 1rem;
   border-collapse: collapse;
-  border-radius: 1rem;
   overflow: hidden;
   color: #2d3439;
 }
+
+
 
 .table tr {
   max-height: 5rem;
@@ -231,8 +244,13 @@ body {
   height: 6rem;
 }
 
+.table__head .table__labels {
+  width: 100%;
+}
+
 .table__head .table__labels th {
   text-align: left;
+  flex: 1;
 }
 
 .table__body tr {
@@ -245,7 +263,7 @@ body {
   padding-left: 4rem !important;
 }
 
-.column--6 {
+.column--3 {
   padding-right: 6.2rem;
 }
 
